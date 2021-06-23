@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+      :root {
+        --black:  blue;
+        --white:  white;
+      }
+
+      body {
+        margin:  0;
+        background-color:  var(--white);
+      }
+
+      canvas {
+        position:  absolute;
+        left:  50%;
+        top:  50%;
+        transform:  translate(-50%, -50%);
+
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      #assets {
+        display:  none;
+      }
+
+      #bg_filter {
+        position:  absolute;
+        mix-blend-mode:  multiply;
+        /*background: linear-gradient(0deg, var(--white) 0%, var(--black) 200%);*/
+        background-color:  var(--white);
+        width:  100%;
+        height:  100%;
+      }
+
+      @media (orientation:  landscape) {
+        canvas {
+          height:  100%;
+        }
+      }
+
+      @media (orientation:  portrait) {
+        canvas {
+          width:  100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="assets"></canvas>
+
+    <canvas id="bg" width="300" height="300"></canvas>
+    <div id="bg_filter"></div>
+    <canvas id="ch" width="300" height="300"></canvas>
+    <canvas id="fg" width="300" height="300"></canvas>
+  </body>
+  <script src="lib/howler.core.js"></script>
+  <script type="text/javascript">
+    var Images = {}, Audio = {};
+    var Colors = {
+      Black: "#141414",
+      DGray: "#5c5c5c",
+      LGray: "#a4a4a4",
+      White: "#ebebeb",
+      Set: function(palette) {
+        ProcessImages(palette);
+
+        palette = Config.palettes[palette];
+        this.Black = palette.Black;
+        this.DGray = palette.DGray;
+        this.LGray = palette.LGray;
+        this.White = palette.White;
+
+        const root = document.documentElement;
+        root.style.setProperty("--black", this.Black);
+        root.style.setProperty("--dgray", this.DGray);
+        root.style.setProperty("--lgray", this.LGray);
+        root.style.setProperty("--white", this.White);
+      }
+    };
+
+    var Config;
+    var Util;
+    var Key = {
+      Handler: {},
+      History: [],
+      Update: undefined,
+    };
+
+    var Canvas = {};
+    var Maps = {
+      Current: {
+        name: undefined,
+        offset: [0, 0],
+        cameraPos: [0, 0],
+        width: undefined,
+        height: undefined,
+      },
+      Set: function(map) {
+        let data = this[map].imageData;
+        this.Current.offset[0] = Math.floor(Util.halfWidth - data.width/2);
+        this.Current.offset[1] = Math.floor(Util.halfHeight - data.height/2);
+        this.Current.name = map;
+        this.Current.width = data.width;
+        this.Current.height = data.height;
+
+        let p = Bots.Player;
+        p.position = this[map].spawnpoint;
+
+        this.Current.cameraPos = [0, 0];
+        if (data.width > Config.canvasWidth) {
+          this.Current.offset[0] = 0;
+        }
+        if (data.height > Config.canvasHeight) {
+          this.Current.offset[1] = 0;
+        }
+
+        updateMap();
+      }
+    };
+    var Bots = {};
+    var _bg, _ch, _fg;
+
+    var Tick = 0;
+  </script>
+  <script src="scripts/assetLoader.js"></script>
+  <script src="scripts/config.js"></script>
+  <script src="scripts/util.js"></script>
+  <script src="scripts/map.js"></script>
+  <script src="scripts/bot.js"></script>
+  <script src="scripts/main.js"></script>
+  <script type="text/javascript">
+    window.onload = init;
+  </script>
+</html>

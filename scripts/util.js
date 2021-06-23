@@ -1,0 +1,33 @@
+// utility functions - shortcuts to code used frequently
+
+Util = {
+  randomColor: function() {
+    return Colors[["Black", "DGray", "LGray", "White"][Math.random() * 4 | 0]]
+  },
+  hexToRGBArray: function(hex) {
+    var r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+    return [r, g, b]
+  },
+  changedHue: function(imageData, color) {
+    var _c = document.querySelector("#assets").getContext("2d");
+
+    let width = imageData.width;
+    let height = imageData.height;
+
+    _c.clearRect(0, 0, width, height);
+    _c.putImageData(imageData, 0, 0);
+
+    _c.globalCompositeOperation = "source-in";
+    _c.fillStyle = color;
+    _c.fillRect(0, 0, width, height);
+
+    _c.globalCompositeOperation = "source-over";
+    imageData = _c.getImageData(0, 0, width, height);
+
+    return imageData
+  },
+  halfWidth: undefined,
+  halfHeight: undefined,
+};

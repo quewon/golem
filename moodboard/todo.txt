@@ -1,0 +1,105 @@
+### to do
+
+[x] variable scene sizes
+[x] camera
+[x] collision mapping
+
+[x] platformer physics
+    [x] collision
+    [x] gravity
+    [x] jumping
+
+    objects & npcs : you can only collide with them from the top
+
+[ ] items that you can pick up, place down, jump up on
+[ ] notebook item that you can read
+[ ] painting item that you can see + read
+[ ] module item
+
+    no menus -- everything ingame
+    all ui is diegetic
+    open world
+
+[ ] scenes
+    [ ] the art gallery
+    [ ] robot junkyard
+    [ ] the graveyard
+[ ] doors
+    
+    graveyard is where you spawn, having just buried your creator
+    with the to-do list she left logged in your system:
+        - bury my body under the mango tree
+        - train the bots to generate art of their own
+        - keep the gallery going
+        - i trust you'll have no problem with my death
+        for you are my masterpiece
+    the protocol has been triggered with her death
+
+[ ] robots made of modules
+    [ ] body (mandatory)
+    [ ] cpu (m)
+    [ ] sensors
+    [ ] manipulators
+        [ ] grabby hands
+        [ ] speakers
+        [ ] screen
+    [ ] battery (m)
+    [ ] drivetrain
+        [ ] wheels
+        [ ] legs
+
+    [ ] tiny robot mindscape that generates and grows depending on their personality and OS data
+
+    you can connect up to this robot's cpu to access its sensory information and mindscape
+
+        [ ] the more you interact with their mindscape... the more potential they develop?
+        [ ] mindscapes have their own ecosystems
+
+    [ ] fixing robots by putting modules together
+    [ ] battery system -- charging dead robots
+    [ ] cpus that have to be reset, perhaps connecting them to your own cpu to copy the OS
+
+    [ ] robots don't have voices, but emote in their own way ?
+
+[ ] npcs
+    [ ] randos asking you to fix their bot for modules
+    [ ] random gallery visitors that wonder why there isn't any new art
+    [ ] your creator's old friends and fans
+
+[ ] day system where the junkyard and gallery refreshes every day
+    [ ] day-specific npc events
+    [ ] the gallery updates its works every season
+
+
+
+### qof
+
+[x] keypress happens on update interval, so the first press and the second press have uneven intervals
+
+    the fix : just use an update loop for all of them
+
+[ ] 
+
+### story
+
+you grow and develop robots that create art
+you host an art gallery where you put up the works of these robots
+
+living up to your creator’s expectations of you
+you’ll never be human, it’s a failing battle
+maybe you should try to be robot
+trying to figure out what it means to be a robot
+to be crafted, designed, yet so open to change
+
+
+you start out by copying what your creator did, pretending to be your creator, going through with the tasks that she left you
+and then your goals change when people realize your creator’s dead. you try to act robotic in the way humans expect
+  the robot-human relationship is one like in Her
+but as you find more and more complexity in these robots you raise,
+  and you meet ther kid that tells you that you’ll never be human
+  you start to try to figure out what it means to be robot
+
+your creator wanted to be immortal, and so created you
+and you’re immortal, but now your goals are different from her
+is it ok to change?
+“change is in the nature of technology. you are a robot.”
