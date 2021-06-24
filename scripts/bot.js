@@ -9,10 +9,9 @@ class Bot {
     // physics
     this.velocity = [0, 0];
     this.weight = this.imageData.width * this.imageData.height / 100;
-    this.stepSize = this.weight * 4;
-    this.initialJumpVelocity = this.weight * 20;
-    this.terminationVelocity = -this.weight * 12;
-    this.gravityScale = 1.3; // changing this to -1 inverts gravity
+    this.stepSize = this.weight * 7;
+    this.initialJumpVelocity = this.weight * 12;
+    this.gravityScale = 1; // changing this to -1 inverts gravity
     this.offGround = false;
 
     // determine edge pixels for collision calc l8r
@@ -110,11 +109,13 @@ class Bot {
 
     var x = this.position[0];
 
+    var increment = 1;
+
     if (this.velocity[1] < 0) {
-      for (let i=0; i<Math.abs(this.velocity[1]); i += 0.1) {
-        var y = this.position[1] - 0.1;
+      for (let i=0; i<Math.abs(this.velocity[1]); i += increment) {
+        var y = this.position[1] - increment;
         if (!this.colliding(x, y)) {
-          this.position[1] -= 0.1;
+          this.position[1] -= increment;
         } else {
           this.velocity[1] = 0;
           this.offGround = false;
@@ -122,10 +123,10 @@ class Bot {
         }
       }
     } else {
-      for (let i=0; i<this.velocity[1]; i += 0.1) {
-        var y = this.position[1] + 0.1;
+      for (let i=0; i<this.velocity[1]; i += increment) {
+        var y = this.position[1] + increment;
         if (!this.colliding(x, y)) {
-          this.position[1] += 0.1;
+          this.position[1] += increment;
         } else {
           this.velocity[1] = 0;
           this.offGround = false;
@@ -184,8 +185,8 @@ class Bot {
     }
   }
   terminateJump() {
-    if (this.velocity[1] < this.terminationVelocity) {
-      this.velocity[1] = this.terminationVelocity;
+    if (this.velocity[1] < -this.initialJumpVelocity) {
+      this.velocity[1] = -this.initialJumpVelocity;
     }
 
     // glide effect
