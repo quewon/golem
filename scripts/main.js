@@ -22,26 +22,23 @@ function init() {
 
 // initialization after assets loaded
 function init_the_sequel() {
-  Colors.Set("default");
-
   // maps
   Maps.graveyard = new Map({
     spawnpoint: [80, 50],
     src: "graveyard.png",
   });
-  Maps.longroom = new Map({
-    width: 400,
-    height: 100,
-    spawnpoint: [150, 20],
+  Maps.test = new Map({
+    spawnpoint: [80, 20],
+    src: "test.png",
   });
 
   // player
-  Bots.Player = new Bot({
+  Items.Player = new Bot({
     name: "Player", //name must be the same as object name
     color: Colors.Black,
     map: Config.startingRoom,
+    src: "bot.png",
   });
-  Maps.Set(Config.startingRoom);
 
   // key event listeners
   document.addEventListener("keydown", function(e) {
@@ -64,29 +61,58 @@ function init_the_sequel() {
   });
 
   // initialize other bots
-  Bots.dummy = new Bot({
+  Items.dummy = new Bot({
     name: "dummy",
     color: Colors.LGray,
-    map: "graveyard",
+    map: "test",
+    src: "bot.png",
+  });
+  Items.dummy3 = new Bot({
+    name: "dummy3",
+    color: Colors.DGray,
+    map: "test",
+    src: "bot.png",
+  });
+  Items.dummy2 = new Bot({
+    name: "dummy2",
+    map: "test",
+    src: "bot2.png",
   });
 
+
+  // this should come after initializing items
+  Maps.Set(Config.startingRoom);
+  Colors.Set("default");
+
   draw();
-  update();
 }
 
 
 // runs every frame
 function draw() {
   _ch.clearRect(0, 0, Config.canvasWidth, Config.canvasHeight);
+  _fg.clearRect(0, 0, Config.canvasWidth, Config.canvasHeight);
+
+  update();
 
   let current = Maps.Current;
   let o = current.offset;
   let c = current.cameraPos;
-  let bots = Maps[current.name].bots;
+  let items = Maps[current.name].items;
 
-  for (let i in bots) {
-    let bot = Bots[bots[i]];
-    _ch.putImageData(bot.imageData, Math.floor(bot.position[0]+o[0]-c[0]), Math.floor(bot.position[1]+o[1]-c[1]-bot.imageData.height));
+  let highlighted = "";
+  if (Items.Player.canPickUp.length > 0) {
+    highlighted = Items.Player.canPickUp[0];
+  }
+
+  for (let i in items) {
+    let item = Items[items[i]];
+    let x = Math.round(item.position[0]+o[0]-c[0]);
+    let y = Math.round(item.position[1]+o[1]-c[1]-item.imageData.height);
+    if (item.name == highlighted) {
+      _ch.fillRect(x-1, y-1, item.imageData.width+2, item.imageData.height+2);
+    }
+    _ch.drawImage(item.img, x, y);
   }
 
   window.requestAnimationFrame(draw);
@@ -103,23 +129,20 @@ function updateMap() {
 }
 
 function update() {
-  let bots = Maps[Maps.Current.name].bots;
+  let items = Maps[Maps.Current.name].items;
 
-  Key.Update();
-
-  for (let i in bots) {
-    let b = Bots[bots[i]];
+  for (let i in items) {
+    let b = Items[items[i]];
     b.update();
   }
 
-  window.requestAnimationFrame(update);
+  Key.Update();
 }
 
 
-// runs when keys are pressed
 Key.Update = function() {
   const map = Config.keyMap;
-  const p = Bots.Player;
+  const p = Items.Player;
 
   for (let i in Key.Handler) {
     if (Key.Handler[i]) {
@@ -135,11 +158,28 @@ Key.Update = function() {
         case map.jump:
           p.jump();
           break;
+        case map.down:
+          if (!p.offGround) {
+            p.move(1, p.stepSize);
+          }
+          break;
+        case map.pickup:
+          if (!p.isPickingUp) p.pickUp();
+          break;
+        case map.place:
+          if (!p.isPlacing) p.place();
+          break;
       }
     }
   }
 
   if (!Key.Handler[map.jump] && p.offGround) {
     p.terminateJump();
+  }
+  if (!Key.Handler[map.place] && p.isPlacing) {
+    p.isPlacing = false;
+  }
+  if (!Key.Handler[map.pickup] && p.isPickingUp) {
+    p.isPickingUp = false;
   }
 }

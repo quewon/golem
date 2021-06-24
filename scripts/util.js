@@ -30,4 +30,19 @@ Util = {
   },
   halfWidth: undefined,
   halfHeight: undefined,
+  dataToImage: function(imageData) {
+    let canvas = document.querySelector("#assets");
+    let _c = canvas.getContext("2d");
+
+    canvas.width = imageData.width;
+    canvas.height = imageData.height;
+    _c.clearRect(0, 0, canvas.width, canvas.height);
+    _c.putImageData(imageData, 0, 0);
+
+    let image = new Image();
+    image.src = canvas.toDataURL();
+    // image.src = imageData;
+
+    return image
+  },
 };

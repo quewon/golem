@@ -1,8 +1,12 @@
 function LoadAssets() {
   var images = [
     "bot.png",
+    "bot2.png",
+
     "graveyard.png",
     "graveyard_cm.png",
+    "test.png",
+    "test_cm.png",
   ];
 
   var sound = {
@@ -18,7 +22,8 @@ function LoadAssets() {
       "8.wav",
       "9.wav",
     ],
-    test: "test.wav",
+    jump: "test.wav",
+    drop: "test.wav",
   };
 
   LoadImages();
@@ -118,8 +123,8 @@ function ProcessImages(palette) {
   };
 
   var queue = [];
-  for (let file in Images) {
-    queue.push(Images[file].imageData);
+  for (let file in Items) {
+    queue.push(Items[file].imageData);
   }
   for (let map in Maps) {
     if (map == "Set" || map == "Current") continue;
@@ -146,5 +151,10 @@ function ProcessImages(palette) {
         }
       }
     }
+  }
+
+  for (let i in Items) {
+    let item = Items[i];
+    item.img = Util.dataToImage(item.imageData);
   }
 }

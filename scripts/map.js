@@ -13,7 +13,7 @@ class Map {
     }
     this.spawnpoint = init.spawnpoint || [0, 0];
 
-    this.bots = [];
+    this.items = [];
 
     // walls are black
     this.walls = [];

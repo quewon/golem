@@ -82,6 +82,10 @@
         root.style.setProperty("--dgray", this.DGray);
         root.style.setProperty("--lgray", this.LGray);
         root.style.setProperty("--white", this.White);
+
+        _ch.fillStyle = Colors[Config.highlightColor];
+
+        updateMap();
       }
     };
 
@@ -110,7 +114,7 @@
         this.Current.width = data.width;
         this.Current.height = data.height;
 
-        let p = Bots.Player;
+        let p = Items.Player;
         p.position = this[map].spawnpoint;
 
         this.Current.cameraPos = [0, 0];
@@ -124,7 +128,7 @@
         updateMap();
       }
     };
-    var Bots = {};
+    var Items = {};
     var _bg, _ch, _fg;
 
     var Tick = 0;
@@ -133,7 +137,7 @@
   <script src="scripts/config.js"></script>
   <script src="scripts/util.js"></script>
   <script src="scripts/map.js"></script>
-  <script src="scripts/bot.js"></script>
+  <script src="scripts/item.js"></script>
   <script src="scripts/main.js"></script>
   <script type="text/javascript">
     window.onload = init;

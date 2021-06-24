@@ -11,10 +11,12 @@
 
     objects & npcs : you can only collide with them from the top
 
-[ ] items that you can pick up, place down, jump up on
-[ ] notebook item that you can read
-[ ] painting item that you can see + read
-[ ] module item
+[ ] items
+    [ ] paintings, which are placed on walls and don't collide
+    [ ] modules that can be attached to bots
+    [x] misc items
+[x] picking stuff up, placing things down, jumping on them
+    [x] stacking objects on your head
 
     no menus -- everything ingame
     all ui is diegetic
@@ -78,7 +80,22 @@
 
     the fix : just use an update loop for all of them
 
-[ ] 
+[x] when you jump the guys dont follow you
+[x] placing should happen on a timer
+[ ] you should be able to walk up one pixel stairs
+[ ] sort objects that you can pick up by distance to player
+    [ ] same y level is prioritized
+    [ ] then same x level
+[x] objects you're carrying should collide and stop you from moving
+[ ] the more things on your head, the weightier you become?
+[x] you can turn physicsupdates off for items on your head
+[x] if you ever get around fixing the transparency issue
+    [x] then also fix the fact that player collides with transparent parts of robots
+        i think you can get around this by comparing the topmost and bottommost rows of edge pixels
+[x] why are we grounded when we're touching the ceiling?
+
+[ ] things on head fall through sometimes ? why
+[ ] fall sound doesn't play when you fall off something instead of jumping of of it
 
 ### story
 
