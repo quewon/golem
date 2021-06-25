@@ -15,7 +15,7 @@ class Item {
 
     // physics
     this.velocity = [0, 0];
-    this.weight = this.img.width * this.img.height / 100;
+    this.weight = this.imageData.width * this.imageData.height / 100;
     this.stepSize = this.weight * 5;
     this.initialJumpVelocity = this.weight * 10;
     this.gravityScale = 1; // changing this to -1 inverts gravity
@@ -35,9 +35,9 @@ class Item {
     }
 
     var i=0;
-    for (let y=0; y<this.img.height; y++) {
+    for (let y=0; y<this.imageData.height; y++) {
       this.edges[y] = [];
-      for (let x=0; x<this.img.width; x++) {
+      for (let x=0; x<this.imageData.width; x++) {
         this.edges[y][x] = pixels[i];
         i++;
       }
@@ -78,7 +78,7 @@ class Item {
     }
 
     this.topEdges = [];
-    for (let x=0; x<this.img.width; x++) {
+    for (let x=0; x<this.imageData.width; x++) {
       search: for (let e in this.edges) {
         let edge = this.edges[e];
         if (edge[0] == x) {
@@ -89,7 +89,7 @@ class Item {
     }
 
     this.bottomEdges = [];
-    for (let x=0; x<this.img.width; x++) {
+    for (let x=0; x<this.imageData.width; x++) {
       search: for (let e=this.edges.length-1; e>=0; e--) {
         let edge = this.edges[e];
         if (edge[0] == x) {
@@ -134,8 +134,8 @@ class Item {
     this.canPickUp = [];
 
     let px = this.position[0] - Config.aoi;
-    let pwidth = this.img.width + Config.aoi;
-    let pheight = this.img.height + Config.aoi;
+    let pwidth = this.imageData.width + Config.aoi;
+    let pheight = this.imageData.height + Config.aoi;
     let py = this.position[1] - Config.aoi - pheight;
 
     // everything interactable (items, bots) is an item
@@ -147,8 +147,8 @@ class Item {
       if (item.name == this.name) continue;
 
       let ix = item.position[0];
-      let iwidth = item.img.width;
-      let iheight = item.img.height;
+      let iwidth = item.imageData.width;
+      let iheight = item.imageData.height;
       let iy = item.position[1] - iheight;
 
       if (
@@ -166,7 +166,7 @@ class Item {
     if (this.holder) {
       let holder = Items[this.holder];
 
-      this.position[0] = holder.position[0] + holder.img.width/2 - this.img.width/2;
+      this.position[0] = holder.position[0] + holder.imageData.width/2 - this.imageData.width/2;
     }
   }
 
@@ -224,6 +224,11 @@ class Item {
           this.position[1] += increment;
         } else {
           this.ground();
+
+          // this results in the object getting stuck in places where the player can't pick it up again
+          // if (this.holder && this.colliding(x,y)) {
+          //   this.disconnect();
+          // }
           return
         }
       }
@@ -243,7 +248,7 @@ class Item {
 
   collidingWithItem(x, y) {
     x = Math.round(x);
-    y = Math.floor(y - this.img.height);
+    y = Math.floor(y - this.imageData.height);
 
     let dir;
     if (this.velocity[1] > 0) {
@@ -255,7 +260,7 @@ class Item {
         let item = Items[this.holder];
 
         let ix = Math.round(item.position[0]);
-        let iy = Math.floor(item.position[1] - item.img.height);
+        let iy = Math.floor(item.position[1] - item.imageData.height);
 
         for (let bx in item.topEdges) {
           let bEdge = item.topEdges[bx];
@@ -276,7 +281,7 @@ class Item {
           if (item.name == this.name) break
 
           let ix = Math.round(item.position[0]);
-          let iy = Math.floor(item.position[1] - item.img.height);
+          let iy = Math.floor(item.position[1] - item.imageData.height);
 
           for (let bx in item.topEdges) {
             let bEdge = item.topEdges[bx];
@@ -298,7 +303,7 @@ class Item {
           if (item.name == this.name) continue
 
           let ix = Math.round(item.position[0]);
-          let iy = Math.floor(item.position[1] - item.img.height);
+          let iy = Math.floor(item.position[1] - item.imageData.height);
 
           for (let bx in item.topEdges) {
             let bEdge = item.topEdges[bx];
@@ -321,7 +326,7 @@ class Item {
 
   colliding(x, y) {
     x = Math.round(x);
-    y = Math.round(y - this.img.height);
+    y = Math.round(y - this.imageData.height);
 
     var walls = Maps[this.map].walls;
     var width = Maps[this.map].width;
@@ -395,7 +400,7 @@ class Bot extends Item {
       // check if collides with wall on pickup
       // if yes, place the bottom item
 
-      let newx = this.position[0] + this.img.width/2 - itemobject.img.width/2;
+      let newx = this.position[0] + this.imageData.width/2 - itemobject.imageData.width/2;
       while (itemobject.colliding(newx,newy)) {
         if (this.onHead.length <= 0) {
           // can't pick up object

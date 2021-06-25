@@ -107,15 +107,19 @@
         height: undefined,
       },
       Set: function(map) {
+        if (this.Current.name) {
+          let oldmap = this[this.Current.name];
+          oldmap.items.splice(oldmap.items.indexOf("Player"), 1);
+        }
+
+        let newmap = this[map];
+        this.Current.name = map;
+
         let data = this[map].imageData;
         this.Current.offset[0] = Math.floor(Util.halfWidth - data.width/2);
         this.Current.offset[1] = Math.floor(Util.halfHeight - data.height/2);
-        this.Current.name = map;
         this.Current.width = data.width;
         this.Current.height = data.height;
-
-        let p = Items.Player;
-        p.position = this[map].spawnpoint;
 
         this.Current.cameraPos = [0, 0];
         if (data.width > Config.canvasWidth) {
@@ -126,6 +130,10 @@
         }
 
         updateMap();
+
+        let p = Items.Player;
+        p.position = this[map].spawnpoint;
+        p.setMap(map);
       }
     };
     var Items = {};

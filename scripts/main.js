@@ -61,23 +61,15 @@ function init_the_sequel() {
   });
 
   // initialize other bots
-  Items.dummy = new Bot({
-    name: "dummy",
-    color: Colors.LGray,
-    map: "test",
-    src: "bot.png",
-  });
-  Items.dummy3 = new Bot({
-    name: "dummy3",
-    color: Colors.DGray,
-    map: "test",
-    src: "bot.png",
-  });
-  Items.dummy2 = new Bot({
-    name: "dummy2",
-    map: "test",
-    src: "bot2.png",
-  });
+
+  for (let i=0; i<10; i++) {
+    Items["dummy"+i] = new Bot({
+      name: "dummy"+i,
+      map: "test",
+      src: ["bot.png", "bot2.png"][Math.random() * 2 | 0],
+      color: [Colors.LGray, Colors.DGray][Math.random() * 2 | 0],
+    })
+  }
 
 
   // this should come after initializing items

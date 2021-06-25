@@ -11,10 +11,14 @@ Util = {
     return [r, g, b]
   },
   changedHue: function(imageData, color) {
-    var _c = document.querySelector("#assets").getContext("2d");
+    var canvas = document.querySelector("#assets");
+    var _c = canvas.getContext("2d");
 
     let width = imageData.width;
     let height = imageData.height;
+
+    canvas.width = width;
+    canvas.height = height;
 
     _c.clearRect(0, 0, width, height);
     _c.putImageData(imageData, 0, 0);
@@ -41,7 +45,6 @@ Util = {
 
     let image = new Image();
     image.src = canvas.toDataURL();
-    // image.src = imageData;
 
     return image
   },
