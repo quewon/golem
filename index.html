@@ -12,6 +12,7 @@
       body {
         margin:  0;
         background-color:  var(--white);
+        overflow:  hidden;
       }
 
       canvas {
@@ -107,11 +108,6 @@
         height: undefined,
       },
       Set: function(map) {
-        if (this.Current.name) {
-          let oldmap = this[this.Current.name];
-          oldmap.items.splice(oldmap.items.indexOf("Player"), 1);
-        }
-
         let newmap = this[map];
         this.Current.name = map;
 

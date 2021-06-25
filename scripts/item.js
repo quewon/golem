@@ -116,10 +116,18 @@ class Item {
     }
 
     this.map = name;
-    this.position = [
-      Maps[name].spawnpoint[0],
-      Maps[name].spawnpoint[1],
-    ];
+
+    if (Maps[name].spawnpoint[0] == "random") {
+      this.position = [
+        Math.floor(Math.random() * Maps[name].imageData.width),
+        0,
+      ];
+    } else {
+      this.position = [
+        Maps[name].spawnpoint[0],
+        Maps[name].spawnpoint[1],
+      ];
+    }
 
     if (this.name == "Player") {
       Maps[name].items.push(this.name);
@@ -211,7 +219,6 @@ class Item {
           if (!child.colliding(cx,cy)) {
             child.position[1] -= increment;
           } else {
-            console.log("child collides");
             this.position[1] += increment;
             return
           }
@@ -240,8 +247,9 @@ class Item {
     this.position[1] = Math.round(this.position[1]);
 
     if (this.name == "Player") {
-      if (this.offGround) Audio.jump.play();
+      if (this.offGround) Audio.drop.play();
     }
+    // if (this.offGround) Audio.drop.play();
 
     this.offGround = false;
   }
@@ -404,11 +412,10 @@ class Bot extends Item {
       while (itemobject.colliding(newx,newy)) {
         if (this.onHead.length <= 0) {
           // can't pick up object
-          Audio.cantPickUp.play();
+          if (this.name == "Player") Audio.cantPickUp.play();
           return
         }
         let item = Items[this.onHead[0]];
-        console.log(item.name);
         newy += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1];
         this.place();
       }
@@ -416,6 +423,8 @@ class Bot extends Item {
       itemobject.holder = this.name;
       itemobject.position[1] = newy;
       this.onHead.push(item);
+
+      if (this.name == "Player") Audio.pickup.play();
     }
   }
 
@@ -428,6 +437,8 @@ class Bot extends Item {
     this.onHead.shift();
     Items[item].holder = null;
     Items[item].move(1, Math.abs(this.position[1]-Items[item].position[1]));
+
+    if (this.name == "Player") Audio.place.play();
   }
 
   // phys
@@ -452,8 +463,6 @@ class Bot extends Item {
     }
 
     //everything under here only runs if a step is taken
-
-    // if (!this.offGround) Audio.steps[Math.random() * Audio.steps.length | 0].play();
 
     if (this.name == "Player") {
       let x = this.position[0];

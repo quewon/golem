@@ -13,6 +13,8 @@ Config = {
   aoi: 0, // can't get this to work for some reason
   highlightColor: "#fff",
 
+  itemOpacity: 0.75,
+
   startingRoom: "test",
 
   // palettes

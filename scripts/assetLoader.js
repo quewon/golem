@@ -22,9 +22,10 @@ function LoadAssets() {
       "8.wav",
       "9.wav",
     ],
-    jump: "test.wav",
     drop: "test.wav",
+    place: "test.wav",
     cantPickUp: "steps/5.wav",
+    pickup: "steps/3.wav",
   };
 
   LoadImages();

@@ -12,7 +12,8 @@
     objects & npcs : you can only collide with them from the top
 
 [ ] items
-    [ ] paintings, which are placed on walls and don't collide
+    [ ] paintings, which don't collide when placed on walls
+        and display information when you're under them
     [ ] modules that can be attached to bots
     [x] misc items
 [x] picking stuff up, placing things down, jumping on them
@@ -22,8 +23,8 @@
     all ui is diegetic
     open world
 
-[ ] scenes
-    [ ] the art gallery
+[x] scenes -- maps
+    [ ] the art gallery + her workshop
     [ ] robot junkyard
     [ ] the graveyard
 [ ] doors
@@ -99,6 +100,7 @@
     [x] but it also shouldn't play when you're walking down stairs
 
 [ ] if there is a wall between head object and holder then it should disconnect
+    tried this... downside is that you can get the object stuck in places where you can't pick it back up again
 
 ### story
 

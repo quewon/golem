@@ -28,7 +28,7 @@ function init_the_sequel() {
     src: "graveyard.png",
   });
   Maps.test = new Map({
-    spawnpoint: [80, 20],
+    spawnpoint: ["random", 20],
     src: "test.png",
   });
 
@@ -60,6 +60,12 @@ function init_the_sequel() {
     };
   });
 
+  window.addEventListener("blur", function(e) {
+    for (let key in Key.Handler) {
+      Key.Handler[key] = false;
+    }
+  });
+
   // initialize other bots
 
   for (let i=0; i<10; i++) {
@@ -75,6 +81,8 @@ function init_the_sequel() {
   // this should come after initializing items
   Maps.Set(Config.startingRoom);
   Colors.Set("default");
+
+  _ch.globalAlpha = Config.itemOpacity;
 
   draw();
 }
@@ -99,12 +107,26 @@ function draw() {
 
   for (let i in items) {
     let item = Items[items[i]];
+
+    if (item.holder) continue;
+
     let x = Math.round(item.position[0]+o[0]-c[0]);
     let y = Math.round(item.position[1]+o[1]-c[1]-item.imageData.height);
     if (item.name == highlighted) {
+      _ch.globalAlpha = 1;
       _ch.fillRect(x-1, y-1, item.imageData.width+2, item.imageData.height+2);
+      _ch.globalAlpha = Config.itemOpacity;
     }
     _ch.drawImage(item.img, x, y);
+
+    if (item.onHead.length > 0) {
+      for (let h in item.onHead) {
+        let hb = Items[item.onHead[h]];
+        let x = Math.round(hb.position[0]+o[0]-c[0]);
+        let y = Math.round(hb.position[1]+o[1]-c[1]-hb.imageData.height);
+        _ch.drawImage(hb.img, x, y);
+      }
+    }
   }
 
   window.requestAnimationFrame(draw);
