@@ -170,6 +170,12 @@ class Item {
     }
   }
 
+  disconnect() {
+    let holder = Items[this.holder];
+    holder.onHead.splice(holder.onHead.indexOf(this.name), 1);
+    this.holder = null;
+  }
+
   // physics
 
   physicsUpdate() {
@@ -379,7 +385,7 @@ class Bot extends Item {
 
       // if there's items on head then put the item way up there
       let newy = itemobject.position[1];
-      let yo = this.img.height + Math.abs(this.position[1] - itemobject.position[1]);
+      let yo = this.bottomEdges[Math.floor(this.bottomEdges.length/2)][1] + Math.abs(this.position[1] - itemobject.position[1]) + 1;
       for (let i in this.onHead) {
         let item = Items[this.onHead[i]];
         yo += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1] + 1;
@@ -391,13 +397,16 @@ class Bot extends Item {
 
       let newx = this.position[0] + this.img.width/2 - itemobject.img.width/2;
       while (itemobject.colliding(newx,newy)) {
-        if (this.onHead.length <= 0) break;
+        if (this.onHead.length <= 0) {
+          // can't pick up object
+          Audio.cantPickUp.play();
+          return
+        }
         let item = Items[this.onHead[0]];
         console.log(item.name);
-        newy += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1] + 1;
+        newy += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1];
         this.place();
       }
-      newy -= 1;
 
       itemobject.holder = this.name;
       itemobject.position[1] = newy;
@@ -411,7 +420,7 @@ class Bot extends Item {
     if (this.onHead.length == 0) return
 
     let item = this.onHead[0];
-    this.onHead.splice(this.onHead.indexOf(item), 1);
+    this.onHead.shift();
     Items[item].holder = null;
     Items[item].move(1, Math.abs(this.position[1]-Items[item].position[1]));
   }

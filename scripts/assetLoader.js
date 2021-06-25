@@ -24,6 +24,7 @@ function LoadAssets() {
     ],
     jump: "test.wav",
     drop: "test.wav",
+    cantPickUp: "steps/5.wav",
   };
 
   LoadImages();
