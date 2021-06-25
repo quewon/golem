@@ -11,7 +11,7 @@ Config = {
 
   // area of interaction
   aoi: 0, // can't get this to work for some reason
-  highlightColor: "White",
+  highlightColor: "#fff",
 
   startingRoom: "test",
 

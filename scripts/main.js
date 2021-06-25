@@ -102,6 +102,7 @@ function draw() {
     let x = Math.round(item.position[0]+o[0]-c[0]);
     let y = Math.round(item.position[1]+o[1]-c[1]-item.imageData.height);
     if (item.name == highlighted) {
+      _ch.fillStyle = Config.highlightColor;
       _ch.fillRect(x-1, y-1, item.imageData.width+2, item.imageData.height+2);
     }
     _ch.drawImage(item.img, x, y);
