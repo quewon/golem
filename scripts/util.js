@@ -11,7 +11,7 @@ Util = {
     return [r, g, b]
   },
   changedHue: function(imageData, color) {
-    var canvas = document.querySelector("#assets");
+    var canvas = document.getElementById("assets");
     var _c = canvas.getContext("2d");
 
     let width = imageData.width;
@@ -35,7 +35,7 @@ Util = {
   halfWidth: undefined,
   halfHeight: undefined,
   dataToImage: function(imageData) {
-    let canvas = document.querySelector("#assets");
+    let canvas = document.getElementById("assets");
     let _c = canvas.getContext("2d");
 
     canvas.width = imageData.width;

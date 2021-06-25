@@ -14,6 +14,7 @@ class Map {
     this.spawnpoint = init.spawnpoint || [0, 0];
 
     this.items = [];
+    this.modules = [];
 
     // walls are black
     this.walls = [];

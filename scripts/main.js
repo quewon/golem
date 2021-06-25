@@ -1,8 +1,8 @@
 function init() {
   // canvases
-  Canvas.bg = document.querySelector("#bg"); //background
-  Canvas.ch = document.querySelector("#ch"); //characters
-  Canvas.fg = document.querySelector("#fg"); //foreground
+  Canvas.bg = document.getElementById("bg"); //background
+  Canvas.ch = document.getElementById("ch"); //characters
+  Canvas.fg = document.getElementById("fg"); //foreground
 
   // canvas context
   _bg = Canvas.bg.getContext("2d");
@@ -25,11 +25,11 @@ function init_the_sequel() {
   // maps
   Maps.graveyard = new Map({
     spawnpoint: [80, 50],
-    src: "graveyard.png",
+    src: "maps/graveyard.png",
   });
   Maps.test = new Map({
     spawnpoint: ["random", 20],
-    src: "test.png",
+    src: "maps/test.png",
   });
 
   // player
@@ -37,7 +37,7 @@ function init_the_sequel() {
     name: "Player", //name must be the same as object name
     color: Colors.Black,
     map: Config.startingRoom,
-    src: "bot.png",
+    src: "modules/body/player.png",
   });
 
   // key event listeners
@@ -68,12 +68,20 @@ function init_the_sequel() {
 
   // initialize other bots
 
-  for (let i=0; i<10; i++) {
+  for (let i=0; i<3; i++) {
     Items["dummy"+i] = new Bot({
       name: "dummy"+i,
       map: "test",
-      src: ["bot.png", "bot2.png"][Math.random() * 2 | 0],
-      color: [Colors.LGray, Colors.DGray][Math.random() * 2 | 0],
+      src: [
+        "modules/body/m.png",
+        "modules/body/racecar.png",
+        "modules/body/obelisk.png",
+        "modules/body/t.png",
+        "modules/body/tiny.png",
+        "modules/body/l.png",
+        "modules/body/sofa.png",
+        "modules/body/humanoid.png",
+      ][Math.random() * 8 | 0],
     })
   }
 
@@ -82,7 +90,7 @@ function init_the_sequel() {
   Maps.Set(Config.startingRoom);
   Colors.Set("default");
 
-  _ch.globalAlpha = Config.itemOpacity;
+  _ch.globalAlpha = Config.moduleOpacity;
 
   draw();
 }
@@ -98,13 +106,13 @@ function draw() {
   let current = Maps.Current;
   let o = current.offset;
   let c = current.cameraPos;
-  let items = Maps[current.name].items;
 
   let highlighted = "";
   if (Items.Player.canPickUp.length > 0) {
     highlighted = Items.Player.canPickUp[0];
   }
 
+  let items = Maps[current.name].items;
   for (let i in items) {
     let item = Items[items[i]];
 
@@ -115,13 +123,21 @@ function draw() {
     if (item.name == highlighted) {
       _ch.globalAlpha = 1;
       _ch.fillRect(x-1, y-1, item.imageData.width+2, item.imageData.height+2);
-      _ch.globalAlpha = Config.itemOpacity;
+      _ch.globalAlpha = Config.moduleOpacity;
     }
-    _ch.drawImage(item.img, x, y);
+    if (item.open) {
+      _ch.globalAlpha = 1;
+      _ch.drawImage(item.img_open, x, y);
+      _ch.globalAlpha = Config.moduleOpacity;
+    } else {
+      _ch.drawImage(item.img, x, y);
+    }
 
     if (item.onHead.length > 0) {
       for (let h in item.onHead) {
-        let hb = Items[item.onHead[h]];
+        let hname = item.onHead[h];
+        let hb;
+        hb = Items[hname];
         let x = Math.round(hb.position[0]+o[0]-c[0]);
         let y = Math.round(hb.position[1]+o[1]-c[1]-hb.imageData.height);
         _ch.drawImage(hb.img, x, y);
@@ -195,17 +211,15 @@ Key.Update = function() {
         case map.place:
           if (!p.isPlacing) p.place();
           break;
+        case map.interact:
+          if (!p.isInteracting) p.interact();
+          break;
       }
     }
   }
 
-  if (!Key.Handler[map.jump] && p.offGround) {
-    p.terminateJump();
-  }
-  if (!Key.Handler[map.place] && p.isPlacing) {
-    p.isPlacing = false;
-  }
-  if (!Key.Handler[map.pickup] && p.isPickingUp) {
-    p.isPickingUp = false;
-  }
+  if (!Key.Handler[map.jump] && p.offGround) p.terminateJump();
+  if (!Key.Handler[map.place] && p.isPlacing) p.isPlacing = false;
+  if (!Key.Handler[map.pickup] && p.isPickingUp) p.isPickingUp = false;
+  if (!Key.Handler[map.interact] && p.isInteracting) p.isInteracting = false;
 }

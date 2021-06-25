@@ -1,12 +1,30 @@
 function LoadAssets() {
   var images = [
-    "bot.png",
-    "bot2.png",
+    // body
+    "modules/body/player.png",
+    "modules/body/m.png",
+    "modules/body/racecar.png",
+    "modules/body/obelisk.png",
+    "modules/body/t.png",
+    "modules/body/tiny.png",
+    "modules/body/l.png",
+    "modules/body/sofa.png",
+    "modules/body/humanoid.png",
 
-    "graveyard.png",
-    "graveyard_cm.png",
-    "test.png",
-    "test_cm.png",
+    // cpu
+    "modules/cpu/player.png",
+    "modules/cpu/advanced.png",
+    "modules/cpu/dummy.png",
+
+    // battery
+    "modules/battery/36x3.png",
+    "modules/battery/12x9.png",
+    "modules/battery/18x6.png",
+
+    "maps/graveyard.png",
+    "maps/graveyard_cm.png",
+    "maps/test.png",
+    "maps/test_cm.png",
   ];
 
   var sound = {
@@ -23,7 +41,6 @@ function LoadAssets() {
       "9.wav",
     ],
     drop: "test.wav",
-    place: "test.wav",
     cantPickUp: "steps/5.wav",
     pickup: "steps/3.wav",
   };
@@ -97,7 +114,7 @@ function LoadAssets() {
 
   // like ProcessImages, but works with imgs instead of imagedata
   function GetImageData() {
-    var _c = document.querySelector("#assets").getContext("2d");
+    var _c = document.getElementById("assets").getContext("2d");
 
     for (let file in Images) {
       const img = Images[file].img;

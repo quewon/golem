@@ -1,6 +1,7 @@
 class Item {
   constructor(init) {
     this.name = init.name;
+    this.type = init.type || "item";
 
     let color = init.color || Colors.White;
 
@@ -15,9 +16,9 @@ class Item {
 
     // physics
     this.velocity = [0, 0];
-    this.weight = this.imageData.width * this.imageData.height / 100;
-    this.stepSize = this.weight * 5;
-    this.initialJumpVelocity = this.weight * 10;
+    this.weight = this.imageData.width * this.imageData.height / 120;
+    this.stepSize = this.weight * 7;
+    this.initialJumpVelocity = this.weight * 13;
     this.gravityScale = 1; // changing this to -1 inverts gravity
     this.offGround = false;
 
@@ -101,10 +102,16 @@ class Item {
 
 
     // picking things up, putting things down
-    this.onHead = [];   this.holder = null;
-    this.modules = [];
+    this.holder = null;
     this.isPlacing = false;
     this.isPickingUp = false;
+    this.onHead = [];
+
+    // for robots
+    this.isInteracting = false;
+    this.open = false;
+    this.img_open = Util.dataToImage(Util.changedHue(this.imageData, Colors.White));
+    this.modules = [];
 
     console.log("spawned: "+this.name);
   }
@@ -194,7 +201,7 @@ class Item {
       this.velocity[1] = Config.velocityCap
     }
 
-    if (this.velocity[1] > 1) {
+    if (this.velocity[1] > this.weight * this.gravityScale + 1) {
       this.offGround = true;
     }
 
@@ -246,10 +253,12 @@ class Item {
     this.velocity[1] = 0;
     this.position[1] = Math.round(this.position[1]);
 
-    if (this.name == "Player") {
+    // if (this.name == "Player") {
+    //   if (this.offGround) Audio.drop.play();
+    // }
+    if (!this.holder) {
       if (this.offGround) Audio.drop.play();
     }
-    // if (this.offGround) Audio.drop.play();
 
     this.offGround = false;
   }
@@ -325,6 +334,21 @@ class Item {
               }
             }
           }
+
+          if (item.open) {
+            for (let bx in item.bottomEdges) {
+              let bEdge = item.bottomEdges[bx];
+              for (let tx in this.bottomEdges) {
+                let edge = this.bottomEdges[tx];
+                if (
+                  x+edge[0] == ix+bEdge[0] &&
+                  y+edge[1] == iy+bEdge[1]
+                ) {
+                  return true
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -343,26 +367,11 @@ class Item {
     // check if it matches up with any wall pixels
     // if so velocity = 0
 
-    // for (let px in this.bottomEdges) {
-    //   let pos = this.bottomEdges[px];
-
-    //   let wy = y+pos[1];
-    //   let wx = x+pos[0];
-
-    //   if (
-    //     walls[wy-1][wx+1] ||
-    //     walls[wy-1][wx-1]
-    //   ) {
-    //     this.move(1, -this.stepSize);
-    //     return "stairs"
-    //   }
-    // }
-
     for (let px in this.edges) {
       let pos = this.edges[px];
 
-      let wy = y+pos[1];
-      let wx = x+pos[0];
+      var wy = y+pos[1];
+      var wx = x+pos[0];
 
       if ( //colliding with out of bounds
         wy >= height ||
@@ -373,12 +382,16 @@ class Item {
       } else if (
         wy < 0 //colliding with top of screen
       ) {
-        return false
+        continue
       }
 
       let wall = walls[wy][wx];
 
       if (wall) {
+        if (Config.debug) {
+          _fg.fillStyle = Util.randomColor();
+          _fg.fillRect(wx, wy, 1, 1);
+        }
         return true
       }
     }
@@ -396,9 +409,17 @@ class Bot extends Item {
     if (this.onHead.indexOf(item) == -1) {
       let itemobject = Items[item];
 
+      if (itemobject.open) itemobject.interaction();
+
       // if there's items on head then put the item way up there
       let newy = itemobject.position[1];
-      let yo = this.bottomEdges[Math.floor(this.bottomEdges.length/2)][1] + Math.abs(this.position[1] - itemobject.position[1]) + 1;
+      let midbottomopening = itemobject.imageData.height - itemobject.bottomEdges[Math.floor(itemobject.bottomEdges.length/2)][1] - 1;
+
+      let yo = Math.abs(this.position[1] - itemobject.position[1]);
+      if (midbottomopening < this.imageData.height) {
+        yo += this.imageData.height;
+      }
+
       for (let i in this.onHead) {
         let item = Items[this.onHead[i]];
         yo += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1] + 1;
@@ -424,6 +445,8 @@ class Bot extends Item {
       itemobject.position[1] = newy;
       this.onHead.push(item);
 
+      // itemobject.physicsUpdate();
+
       if (this.name == "Player") Audio.pickup.play();
     }
   }
@@ -437,8 +460,20 @@ class Bot extends Item {
     this.onHead.shift();
     Items[item].holder = null;
     Items[item].move(1, Math.abs(this.position[1]-Items[item].position[1]));
+  }
 
-    if (this.name == "Player") Audio.place.play();
+  interact() {
+    this.isInteracting = true;
+    if (this.canPickUp.length == 0) return;
+
+    let item = Items[this.canPickUp[0]];
+    if ('interaction' in item) item.interaction();
+  }
+
+  interaction() {
+    this.open = !this.open;
+
+    console.log(this.open);
   }
 
   // phys
@@ -496,4 +531,8 @@ class Bot extends Item {
     // glide effect
     // this.velocity[1] = this.velocity[1] / 2;
   }
+}
+
+class Module extends Item {
+  // phys
 }

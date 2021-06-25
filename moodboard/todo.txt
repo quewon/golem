@@ -39,7 +39,8 @@
     the protocol has been triggered with her death
 
 [ ] robots made of modules
-    [ ] body (mandatory)
+    [x] body (mandatory)
+        you can't pick up robot bodies?
     [ ] cpu (m)
     [ ] sensors
     [ ] manipulators
@@ -50,6 +51,10 @@
     [ ] drivetrain
         [ ] wheels
         [ ] legs
+
+    [ ] if the robot is OPEN, you can't pick it up
+        [ ] and instead you can pick up the modules inside of it
+        [ ] and also rotate these modules
 
     [ ] tiny robot mindscape that generates and grows depending on their personality and OS data
 
@@ -98,9 +103,15 @@
 [x] things on head fall through when you bump your head on a wall
 [x] fall sound doesn't play when you fall off something instead of jumping of of it
     [x] but it also shouldn't play when you're walking down stairs
-
 [ ] if there is a wall between head object and holder then it should disconnect
     tried this... downside is that you can get the object stuck in places where you can't pick it back up again
+[ ] when you drop something, the sfx volume depends on how heavy it is
+
+[ ] a start menu where you can mute the sound
+
+[ ] time to finally fix my aoi bullshit
+[ ] bots (bodies) should be opaque & solid
+[ ] modules should be transparent
 
 ### story
 

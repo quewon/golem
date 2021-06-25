@@ -10,10 +10,10 @@ Config = {
   airDamping: 0.01,
 
   // area of interaction
-  aoi: 0, // can't get this to work for some reason
+  aoi: 1, // can't get this to work for some reason
   highlightColor: "#fff",
 
-  itemOpacity: 0.75,
+  moduleOpacity: 0.75,
 
   startingRoom: "test",
 
