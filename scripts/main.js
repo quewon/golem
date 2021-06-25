@@ -136,6 +136,18 @@ function update() {
     b.update();
   }
 
+  for (let i in items) {
+    let b = Items[items[i]];
+    if (b.holder) continue;
+    if (b.onHead.length > 0) {
+      for (let h=b.onHead.length-1; h>=0; h--) {
+        let hb = Items[b.onHead[h]];
+        hb.physicsUpdate();
+      }
+    }
+    b.physicsUpdate();
+  }
+
   Key.Update();
 }
 

@@ -94,8 +94,11 @@
         i think you can get around this by comparing the topmost and bottommost rows of edge pixels
 [x] why are we grounded when we're touching the ceiling?
 
-[ ] things on head fall through sometimes ? why
-[ ] fall sound doesn't play when you fall off something instead of jumping of of it
+[x] things on head fall through when you bump your head on a wall
+[x] fall sound doesn't play when you fall off something instead of jumping of of it
+    [x] but it also shouldn't play when you're walking down stairs
+
+[ ] if there is a wall between head object and holder then it should disconnect
 
 ### story
 

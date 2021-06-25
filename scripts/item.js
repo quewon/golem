@@ -168,15 +168,11 @@ class Item {
 
       this.position[0] = holder.position[0] + holder.img.width/2 - this.img.width/2;
     }
-
-    this.physicsUpdate();
   }
 
   // physics
 
   physicsUpdate() {
-    // if (this.holder) return
-
     this.velocity[1] += this.weight * this.gravityScale;
     this.velocity[1] = this.velocity[1] / (1+Config.airDamping);
 
@@ -184,11 +180,15 @@ class Item {
       this.velocity[1] = Config.velocityCap
     }
 
+    if (this.velocity[1] > 1) {
+      this.offGround = true;
+    }
+
     var x = this.position[0];
 
     var increment = 1;
 
-    if (this.velocity[1] < 0) {
+    if (this.velocity[1] < 0) { //going up
       for (let i=0; i<Math.abs(this.velocity[1]); i += increment) {
         var y = this.position[1] - increment;
         if (!this.colliding(x, y)) {
@@ -257,7 +257,7 @@ class Item {
             let edge = this.bottomEdges[tx];
             if (
               x+edge[0] == ix+bEdge[0] &&
-              y+edge[1] == iy+bEdge[1]
+              y+edge[1] >= iy+bEdge[1]
             ) {
               return true
             }
@@ -267,7 +267,7 @@ class Item {
         let items = Items[this.holder].onHead;
         for (let i in items) {
           let item = Items[items[i]];
-          if (item.name == this.name) continue
+          if (item.name == this.name) break
 
           let ix = Math.round(item.position[0]);
           let iy = Math.floor(item.position[1] - item.img.height);
@@ -278,7 +278,7 @@ class Item {
               let edge = this.bottomEdges[tx];
               if (
                 x+edge[0] == ix+bEdge[0] &&
-                y+edge[1] == iy+bEdge[1]
+                y+edge[1] >= iy+bEdge[1]
               ) {
                 return true
               }
@@ -323,25 +323,41 @@ class Item {
     // go through edge pixels of player
     // check if it matches up with any wall pixels
     // if so velocity = 0
+
+    // for (let px in this.bottomEdges) {
+    //   let pos = this.bottomEdges[px];
+
+    //   let wy = y+pos[1];
+    //   let wx = x+pos[0];
+
+    //   if (
+    //     walls[wy-1][wx+1] ||
+    //     walls[wy-1][wx-1]
+    //   ) {
+    //     this.move(1, -this.stepSize);
+    //     return "stairs"
+    //   }
+    // }
+
     for (let px in this.edges) {
       let pos = this.edges[px];
 
       let wy = y+pos[1];
       let wx = x+pos[0];
 
-      if (
+      if ( //colliding with out of bounds
         wy >= height ||
         wx >= width ||
         wx < 0
       ) {
         return true
       } else if (
-        wy < 0
+        wy < 0 //colliding with top of screen
       ) {
         return false
       }
 
-      let wall = walls[y+pos[1]][x+pos[0]];
+      let wall = walls[wy][wx];
 
       if (wall) {
         return true
@@ -360,16 +376,31 @@ class Bot extends Item {
 
     if (this.onHead.indexOf(item) == -1) {
       let itemobject = Items[item];
-      itemobject.holder = this.name;
 
       // if there's items on head then put the item way up there
+      let newy = itemobject.position[1];
       let yo = this.img.height + Math.abs(this.position[1] - itemobject.position[1]);
       for (let i in this.onHead) {
         let item = Items[this.onHead[i]];
-        yo += item.img.height;
+        yo += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1] + 1;
       }
-      itemobject.position[1] -= yo;
+      newy -= yo;
 
+      // check if collides with wall on pickup
+      // if yes, place the bottom item
+
+      let newx = this.position[0] + this.img.width/2 - itemobject.img.width/2;
+      while (itemobject.colliding(newx,newy)) {
+        if (this.onHead.length <= 0) break;
+        let item = Items[this.onHead[0]];
+        console.log(item.name);
+        newy += item.bottomEdges[Math.floor(item.bottomEdges.length/2)][1] + 1;
+        this.place();
+      }
+      newy -= 1;
+
+      itemobject.holder = this.name;
+      itemobject.position[1] = newy;
       this.onHead.push(item);
     }
   }
